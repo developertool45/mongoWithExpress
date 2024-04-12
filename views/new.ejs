@@ -7,9 +7,11 @@
 </head>
 <body>
     <h2>write new chat</h2>
-    <form action="">
-        <input type="text" placeholder=" who are you ?" name="from">
-        <textarea name="message" id="" cols="30" rows="10" placeholder=" "></textarea>
+    <form action="/chats" method="POST">
+        <input type="text" placeholder=" who are you ?" name="from"> <br><br>
+        <textarea name="message" id="" cols="30" rows="10" placeholder=" ">Write your msg here.</textarea><br><br>
+        <input type="text" placeholder="add reciever" name="to"><br><br>
+        <button>Create Chat</button>
     </form>
 </body>
 </html>
