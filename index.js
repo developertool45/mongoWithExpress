@@ -8,7 +8,7 @@ const exp = require('constants');
 const methodOverride = require("method-override");
 
 
-app.use(methodOverride("_method"))
+app.use(methodOverride("_method")) 
 app.use(express.static(path.join(__dirname, "public")))
 
 app.set("views", path.join(__dirname, "views"));
@@ -80,17 +80,17 @@ app.get("/chats/:id/edit", async(req, res) => {
 app.put("/chats/:id", async (req, res) => {
     try {
         let { id } = req.params;
-        let { message } = req.body;
+        let { message : newMsg} = req.body;
            
         if (!id) {
             throw new Error("ID parameter is missing");
         }
 
-        if (!message) {
+        if (!newMsg) {
             throw new Error("newMsg parameter is missing");
         }
 
-        let updateChat = await Chat.findByIdAndUpdate(id, { message: message }, { runValidators: true, new: true });
+        let updateChat = await Chat.findByIdAndUpdate(id, { message: newMsg }, { runValidators: true, new: true });
 
         if (!updateChat) {
             throw new Error(`No chat found with ID: ${id}`);
@@ -103,8 +103,16 @@ app.put("/chats/:id", async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+ 
+// delete chat route
 
+app.delete("/chats/:id",  async(req, res) => {
+   let { id } = req.params;
+    let chatDelete = await Chat.findByIdAndDelete(id );
+    console.log(chatDelete);
+    res.redirect("/chats")
 
+})
 
 app.listen(8080, (req, res) => {
     console.log("server listening on 8080");

@@ -18,9 +18,14 @@
             <p><b>From :</b> <%= chat.from %></p>
             <div class="msg">
                 <p> <b>message :</b> <%= chat.message %></p> 
-                <form action="/chats/<%= chat._id %>/edit">
+               <div class="flex">
+                 <form method="get" action="/chats/<%= chat._id %>/edit">
                     <button>edit</button>
                 </form>               
+                <form action="/chats/<%= chat._id %>/?_method=DELETE" method="POST">
+                    <button type="submit">Delete</button>
+                </form> 
+               </div>              
             </div>
             <p><b>Recieved By :</b> <%= chat.to %></p> 
             <p><b>Time  :</b> <%= chat.created_at.toString().split(" ")[4] %></p>

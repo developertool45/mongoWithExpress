@@ -11,3 +11,8 @@
 body{
     margin-left: 1.2rem;
 }
+.flex{
+
+    display: flex;
+    gap: 0.7rem;
+}
