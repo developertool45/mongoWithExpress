@@ -3,7 +3,6 @@ const app = express();
 const mongoose = require('mongoose');
 const path = require("path");
 const Chat = require('./public/models/chat.js');
-const { log } = require('console');
 const exp = require('constants');
 const methodOverride = require("method-override");
 
@@ -59,7 +58,7 @@ app.post("/chats", (req, res) =>{
         console.log(err);
     })
     res.redirect("/chats")
-})
+}) 
 
 //edit route 
 app.get("/chats/:id/edit", async(req, res) => {
