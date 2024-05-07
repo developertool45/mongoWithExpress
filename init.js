@@ -12,7 +12,7 @@ main().then((res) => {
 })
 
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/whatsapp')
+    await mongoose.connect('mongodb://127.0.0.1:27017/newfakewhatsapp')
 }
 
 const allChats = [  
@@ -62,5 +62,10 @@ const allChats = [
 
 ]
 
-Chat.insertMany(allChats);
+// Chat.insertMany(allChats);
+Chat.insertMany(allChats).then(() => {
+    console.log('Chats inserted successfully');
+}).catch((err) => {
+    console.error('Error inserting chats:', err);
+})
 

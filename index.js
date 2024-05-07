@@ -2,9 +2,10 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const path = require("path");
-const Chat = require('./public/models/chat.js');
+const Chat = require('./models/chat.js');
 const exp = require('constants');
 const methodOverride = require("method-override");
+const ExpressError = require('./ExpressError.js');
 
 
 app.use(methodOverride("_method")) 
@@ -23,7 +24,7 @@ main().then((res) => {
 })
 
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/whatsapp')
+    await mongoose.connect('mongodb://127.0.0.1:27017/newfakewhatsapp')
 }
 
 
@@ -40,6 +41,7 @@ app.get("/chats", async(req, res) => {
 
 //new route
 app.get("/chats/new", (req, res) => {
+    throw new ExpressError(404, "page not found");
     res.render("new.ejs")
 });
 
@@ -66,6 +68,15 @@ app.get("/chats/:id/edit", async(req, res) => {
     let chat = await Chat.findById(id);
     res.render("edit.ejs", {chat})
 })
+//Show route 
+app.get("/chats/:id", async(req, res) => {
+    let { id } = req.params;
+    let chat = await Chat.findById(id);
+    if (!chat) {
+        throw new ExpressError(404, "chat not found");
+    }
+    res.render("edit.ejs", {chat})
+})
 
 //update route
 
@@ -79,22 +90,17 @@ app.get("/chats/:id/edit", async(req, res) => {
 app.put("/chats/:id", async (req, res) => {
     try {
         let { id } = req.params;
-        let { message : newMsg} = req.body;
-           
+        let { message : newMsg} = req.body;           
         if (!id) {
             throw new Error("ID parameter is missing");
         }
-
         if (!newMsg) {
             throw new Error("newMsg parameter is missing");
         }
-
         let updateChat = await Chat.findByIdAndUpdate(id, { message: newMsg }, { runValidators: true, new: true });
-
         if (!updateChat) {
             throw new Error(`No chat found with ID: ${id}`);
         }
-
         console.log(updateChat);
         res.redirect("/chats");
     } catch (error) {
@@ -111,6 +117,11 @@ app.delete("/chats/:id",  async(req, res) => {
     console.log(chatDelete);
     res.redirect("/chats")
 
+})
+
+app.use((err, req, res, next) => {
+    let { status = "500", message = "SOME ERROR OCCURED" } = err;
+    res.status(status).send(message);
 })
 
 app.listen(8080, (req, res) => {
