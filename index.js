@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
 })
 app.get("/chats", async(req, res) => {
     let chats = await Chat.find();
-    console.log(chats);
+    // console.log(chats);
    res.render("index.ejs", {chats})
 })
 
@@ -68,15 +68,7 @@ app.get("/chats/:id/edit", async(req, res) => {
     let chat = await Chat.findById(id);
     res.render("edit.ejs", {chat})
 })
-//Show route 
-app.get("/chats/:id", async(req, res) => {
-    let { id } = req.params;
-    let chat = await Chat.findById(id);
-    if (!chat) {
-        throw new ExpressError(404, "chat not found");
-    }
-    res.render("edit.ejs", {chat})
-})
+
 
 //update route
 
@@ -88,26 +80,28 @@ app.get("/chats/:id", async(req, res) => {
 //     // res.redirect("/chats")
 // })
 app.put("/chats/:id", async (req, res) => {
-    try {
+   
         let { id } = req.params;
         let { message : newMsg} = req.body;           
-        if (!id) {
-            throw new Error("ID parameter is missing");
-        }
-        if (!newMsg) {
-            throw new Error("newMsg parameter is missing");
-        }
+        
         let updateChat = await Chat.findByIdAndUpdate(id, { message: newMsg }, { runValidators: true, new: true });
         if (!updateChat) {
-            throw new Error(`No chat found with ID: ${id}`);
+            throw new Error( `No chat found with ID: ${id}`);
         }
         console.log(updateChat);
-        res.redirect("/chats");
-    } catch (error) {
-        console.error(`Error: ${error.message}`);
-        res.status(500).send("Internal Server Error");
-    }
+        // res.redirect("/chats");
+   
 });
+
+//Show route 
+app.get("/chats/:id", async(req, res, next) => {
+    let { id } = req.params;
+    let chat = await Chat.findById(id);
+    if (!chat) {
+        next(new ExpressError(404, "chat not found"));
+    }
+    res.render("edit.ejs", {chat})
+})
  
 // delete chat route
 

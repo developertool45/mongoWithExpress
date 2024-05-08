@@ -9,11 +9,11 @@
         <h3>Edit your chat : <%= chat._id %></h3>
         <p> this chat was sent from :<b> <%= chat.from %></b> to <b><%= chat.to %></b></p>
         <form action="/chats/<%= chat._id %>/?_method=PUT" method="POST">
-            <textarea name="message" cols="30" rows="5">
+            <textarea name="message" cols="30" rows="3">
                 <%= chat.message %>
             </textarea>
             <br><br>
-            <button type="submit">Edit</button>
+            <button type="submit">Update</button>
         </form>
 
 </body>
